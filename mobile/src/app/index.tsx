@@ -1,75 +1,57 @@
-import { useClerk, useAuth, useUser } from "@clerk/expo";
+import { useAuth, useClerk, useUser } from "@clerk/expo";
 import { type Href, useRouter } from "expo-router";
 import {
   ActivityIndicator,
   Image,
-  Platform,
   Pressable,
   SafeAreaView,
-  StyleSheet,
   StatusBar,
   Text,
-  useWindowDimensions,
   View,
 } from "react-native";
 
 const pastaImage = require("../../design/auth-design/background-images-for-screens/bg-image-forgot-password--create-account-left-bottom--auth-page--home-page.png");
 const pepperImage = require("../../design/auth-design/background-images-for-screens/background-2.png");
-
-const COLORS = {
-  background: "#FAF7F2",
-  textPrimary: "#2C2A28",
-  textMuted: "#6B5F55",
-  terracotta: "#C97663",
-  warmGold: "#D89E5E",
-  softCream: "#F4EEE6",
-};
-
-const serifFont = Platform.select({
-  ios: "Georgia",
-  android: "serif",
-  default: "serif",
-});
+const logoImage = require("../../design/auth-design/background-images-for-screens/logo.png");
 
 export default function Index() {
-  const { width, height } = useWindowDimensions();
   const { isLoaded, isSignedIn } = useAuth();
   const { signOut } = useClerk();
   const { user } = useUser();
   const router = useRouter();
-  const scale = Math.min(width / 393, height / 852);
 
   if (!isLoaded) {
     return (
-      <View style={styles.loadingScreen}>
-        <ActivityIndicator color={COLORS.terracotta} size="large" />
+      <View className="flex-1 items-center justify-center bg-[#FAF7F2]">
+        <ActivityIndicator color="#C97663" size="large" />
       </View>
     );
   }
 
   if (isSignedIn) {
     return (
-      <SafeAreaView style={styles.signedInScreen}>
-        <Text style={styles.signedInEyebrow}>Signed in with Clerk</Text>
-        <Text style={styles.signedInTitle}>Welcome!</Text>
-        <Text style={styles.signedInText}>
+      <SafeAreaView className="flex-1 justify-center bg-[#FAF7F2] px-6">
+        <Text className="text-sm font-bold uppercase text-[#C97663]">
+          Signed in with Clerk
+        </Text>
+        <Text className="mt-2.5 text-[34px] font-bold text-[#2C2A28]">
+          Welcome!
+        </Text>
+        <Text className="mt-2 text-base leading-[23px] text-[#6B5F55]">
           {user?.primaryEmailAddress?.emailAddress || user?.id}
         </Text>
         <Pressable
+          className="mt-7 h-[54px] items-center justify-center rounded-2xl bg-[#2C2A28] active:opacity-80"
           onPress={() => signOut()}
-          style={({ pressed }) => [
-            styles.signOutButton,
-            pressed && styles.pressedButton,
-          ]}
         >
-          <Text style={styles.signOutButtonText}>Sign out</Text>
+          <Text className="text-[17px] font-bold text-white">Sign out</Text>
         </Pressable>
       </SafeAreaView>
     );
   }
 
   return (
-    <View style={styles.screen}>
+    <View className="flex-1 overflow-hidden bg-[#FAF7F2]">
       <StatusBar
         barStyle="dark-content"
         translucent
@@ -79,74 +61,58 @@ export default function Index() {
       <Image
         source={pastaImage}
         resizeMode="contain"
-        style={[
-          styles.pastaImage,
-          {
-            width: 265 * scale,
-            height: 265 * scale,
-            left: -67 * scale,
-            bottom: 24 * scale,
-          },
-        ]}
+        className="absolute -left-[67px] bottom-6 h-[265px] w-[265px]"
       />
       <Image
         source={pepperImage}
         resizeMode="contain"
-        style={[
-          styles.pepperImage,
-          {
-            width: 180 * scale,
-            height: 180 * scale,
-            right: -50 * scale,
-            bottom: 112 * scale,
-          },
-        ]}
+        className="absolute -right-[50px] bottom-28 h-[180px] w-[180px]"
       />
 
-      <SafeAreaView style={styles.safeArea}>
-        <View style={styles.content}>
-          <View style={[styles.brandBlock, { marginTop: 224 * scale }]}>
-            <TemporaryLogo scale={scale} />
-            <Text style={[styles.brandName, { fontSize: 39 * scale }]}>
+      <SafeAreaView className="flex-1">
+        <View className="flex-1 items-center px-6">
+          <View className="z-10 mt-56 items-center">
+            <Image
+              source={logoImage}
+              resizeMode="contain"
+              className="h-[82px] w-[76px]"
+            />
+            <Text className="mt-[13px] font-serif text-[39px] font-bold text-[#2C2A28]">
               Sagzali
             </Text>
           </View>
 
-          <View style={[styles.copyBlock, { marginTop: 62 * scale }]}>
-            <Text style={[styles.headline, { fontSize: 32 * scale }]}>
+          <View className="z-10 mt-[62px] items-center">
+            <Text className="font-serif text-[32px] font-bold leading-[40px] text-[#2C2A28]">
               Share recipes.
             </Text>
-            <Text style={[styles.headline, { fontSize: 32 * scale }]}>
+            <Text className="font-serif text-[32px] font-bold leading-[40px] text-[#2C2A28]">
               Inspire moments.
             </Text>
-            <Text style={[styles.subtitle, { fontSize: 16 * scale }]}>
+            <Text className="mt-6 text-center text-base leading-[25px] text-[#6B5F55]">
               Join a community of home cooks
             </Text>
-            <Text style={[styles.subtitle, { fontSize: 16 * scale }]}>
+            <Text className="text-center text-base leading-[25px] text-[#6B5F55]">
               and food lovers.
             </Text>
           </View>
 
-          <View style={styles.footer}>
+          <View className="absolute bottom-[58px] z-10 w-[250px] items-center">
             <Pressable
+              className="h-14 w-full items-center justify-center rounded-[20px] bg-[#D86A25] active:opacity-80"
               onPress={() => router.push("/sign-up" as Href)}
-              style={({ pressed }) => [
-                styles.primaryButton,
-                pressed && styles.pressedButton,
-              ]}
             >
-              <Text style={styles.primaryButtonText}>Get Started</Text>
+              <Text className="text-lg font-bold text-white">Get Started</Text>
             </Pressable>
 
             <Pressable
+              className="mt-[30px] flex-row items-center justify-center active:opacity-80"
               onPress={() => router.push("/sign-in" as Href)}
-              style={({ pressed }) => [
-                styles.loginRow,
-                pressed && styles.pressedButton,
-              ]}
             >
-              <Text style={styles.loginText}>Already have an account? </Text>
-              <Text style={styles.loginLink}>Log in</Text>
+              <Text className="text-base text-[#3F3F3F]">
+                Already have an account?{" "}
+              </Text>
+              <Text className="text-base font-bold text-[#C35E2D]">Log in</Text>
             </Pressable>
           </View>
         </View>
@@ -154,276 +120,3 @@ export default function Index() {
     </View>
   );
 }
-
-function TemporaryLogo({ scale }: { scale: number }) {
-  return (
-    <View style={[styles.logo, { width: 66 * scale, height: 70 * scale }]}>
-      <View style={[styles.logoSideLine, { height: 50 * scale }]} />
-      <View style={styles.fork}>
-        <View style={styles.forkTines}>
-          <View style={styles.forkTine} />
-          <View style={styles.forkTine} />
-          <View style={styles.forkTine} />
-          <View style={styles.forkTine} />
-        </View>
-        <View style={styles.forkNeck} />
-        <View style={styles.forkHandle} />
-      </View>
-      <View style={styles.logoSprig}>
-        <View style={styles.leaf} />
-        <View style={[styles.leaf, styles.leafRight]} />
-        <View style={[styles.leaf, styles.leafSmall]} />
-      </View>
-      <View style={styles.logoRuleLong} />
-      <View style={styles.logoRuleShort} />
-      <View style={styles.logoBookmark} />
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
-  loadingScreen: {
-    alignItems: "center",
-    backgroundColor: COLORS.background,
-    flex: 1,
-    justifyContent: "center",
-  },
-  screen: {
-    flex: 1,
-    backgroundColor: COLORS.background,
-    overflow: "hidden",
-  },
-  safeArea: {
-    flex: 1,
-  },
-  content: {
-    flex: 1,
-    alignItems: "center",
-    paddingHorizontal: 24,
-  },
-  pastaImage: {
-    position: "absolute",
-    zIndex: 0,
-  },
-  pepperImage: {
-    position: "absolute",
-    zIndex: 0,
-  },
-  brandBlock: {
-    alignItems: "center",
-    zIndex: 1,
-  },
-  logo: {
-    borderWidth: 2.5,
-    borderColor: "#3B3026",
-    borderRadius: 8,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "rgba(250, 247, 242, 0.7)",
-  },
-  logoSideLine: {
-    position: "absolute",
-    left: 7,
-    top: 7,
-    width: 3,
-    borderRadius: 999,
-    backgroundColor: COLORS.warmGold,
-  },
-  fork: {
-    width: 20,
-    height: 45,
-    marginTop: -4,
-    alignItems: "center",
-  },
-  forkTines: {
-    width: 20,
-    height: 19,
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-  forkTine: {
-    width: 3,
-    height: 19,
-    borderRadius: 999,
-    backgroundColor: COLORS.textPrimary,
-  },
-  forkNeck: {
-    width: 13,
-    height: 8,
-    marginTop: -2,
-    borderBottomLeftRadius: 7,
-    borderBottomRightRadius: 7,
-    backgroundColor: COLORS.textPrimary,
-  },
-  forkHandle: {
-    width: 6,
-    height: 24,
-    borderRadius: 999,
-    backgroundColor: COLORS.textPrimary,
-  },
-  logoSprig: {
-    position: "absolute",
-    right: 5,
-    top: 24,
-    width: 20,
-    height: 32,
-    borderLeftWidth: 2,
-    borderLeftColor: COLORS.warmGold,
-    transform: [{ rotate: "-18deg" }],
-  },
-  leaf: {
-    position: "absolute",
-    left: 0,
-    top: 2,
-    width: 11,
-    height: 7,
-    borderTopLeftRadius: 9,
-    borderBottomRightRadius: 9,
-    backgroundColor: COLORS.warmGold,
-    transform: [{ rotate: "30deg" }],
-  },
-  leafRight: {
-    left: 7,
-    top: 13,
-    transform: [{ rotate: "-35deg" }],
-  },
-  leafSmall: {
-    left: 1,
-    top: 24,
-    width: 9,
-    height: 6,
-  },
-  logoRuleLong: {
-    position: "absolute",
-    right: 4,
-    bottom: 13,
-    width: 28,
-    height: 2,
-    borderRadius: 999,
-    backgroundColor: COLORS.textPrimary,
-  },
-  logoRuleShort: {
-    position: "absolute",
-    right: 4,
-    bottom: 7,
-    width: 37,
-    height: 2,
-    borderRadius: 999,
-    backgroundColor: COLORS.textPrimary,
-  },
-  logoBookmark: {
-    position: "absolute",
-    left: 12,
-    bottom: -8,
-    width: 13,
-    height: 21,
-    backgroundColor: COLORS.warmGold,
-    transform: [{ skewY: "-20deg" }],
-  },
-  brandName: {
-    marginTop: 13,
-    color: COLORS.textPrimary,
-    fontFamily: serifFont,
-    fontWeight: "700",
-    letterSpacing: 0,
-  },
-  copyBlock: {
-    alignItems: "center",
-    zIndex: 1,
-  },
-  headline: {
-    color: COLORS.textPrimary,
-    fontFamily: serifFont,
-    fontWeight: "700",
-    lineHeight: 40,
-    letterSpacing: 0,
-    textAlign: "center",
-  },
-  subtitle: {
-    color: COLORS.textMuted,
-    lineHeight: 25,
-    letterSpacing: 0,
-    textAlign: "center",
-  },
-  footer: {
-    position: "absolute",
-    left: 72,
-    right: 72,
-    bottom: 58,
-    zIndex: 1,
-    alignItems: "center",
-  },
-  primaryButton: {
-    width: "100%",
-    height: 54,
-    borderRadius: 18,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "#D86A25",
-  },
-  primaryButtonText: {
-    color: "#FFFFFF",
-    fontSize: 18,
-    fontWeight: "700",
-    letterSpacing: 0,
-  },
-  loginRow: {
-    marginTop: 30,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  loginText: {
-    color: "#3F3F3F",
-    fontSize: 16,
-    letterSpacing: 0,
-  },
-  loginLink: {
-    color: "#C35E2D",
-    fontSize: 16,
-    fontWeight: "700",
-    letterSpacing: 0,
-  },
-  signedInScreen: {
-    backgroundColor: COLORS.background,
-    flex: 1,
-    justifyContent: "center",
-    paddingHorizontal: 24,
-  },
-  signedInEyebrow: {
-    color: COLORS.terracotta,
-    fontSize: 14,
-    fontWeight: "700",
-    letterSpacing: 0,
-    textTransform: "uppercase",
-  },
-  signedInTitle: {
-    color: COLORS.textPrimary,
-    fontSize: 34,
-    fontWeight: "700",
-    letterSpacing: 0,
-    marginTop: 10,
-  },
-  signedInText: {
-    color: COLORS.textMuted,
-    fontSize: 16,
-    lineHeight: 23,
-    marginTop: 8,
-  },
-  signOutButton: {
-    alignItems: "center",
-    backgroundColor: COLORS.textPrimary,
-    borderRadius: 16,
-    height: 54,
-    justifyContent: "center",
-    marginTop: 28,
-  },
-  signOutButtonText: {
-    color: "#FFFFFF",
-    fontSize: 17,
-    fontWeight: "700",
-  },
-  pressedButton: {
-    opacity: 0.82,
-  },
-});
